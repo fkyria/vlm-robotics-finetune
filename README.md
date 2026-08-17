@@ -28,24 +28,41 @@ output the correct answer letter.
 |---|---|
 | Training examples | 200 |
 | Validation examples | 20 |
+| Test examples | 100 |
 | Final training loss | 0.244 |
 | Final evaluation loss | 0.358 (step 75) |
+| Validation accuracy | 80.0% (16/20) |
+| **Test accuracy** | **67.0% (67/100)** |    
+
+
+**Notes:**
+- The best checkpoint (lowest validation loss) was the very last one, at step 75, meaning
+validation loss was still improving right up to the end of the 3-epoch run rather than
+having plateaued or started rising. This suggests the model likely hadn't finished
+learning yet, and more epochs (or more training data) would plausibly improve results
+further rather than risk overfitting.
+
+- As expected, validation accuracy is higher than test accuracy → the validation set indirectly influenced which checkpoint got kept whereas the test accuracy was done on a fully untouched set.
+
+
+### Next steps
+
+- Train for more epochs.
+- Test on a different dataset entirely.
+
 
 ## Setup
 
-```bash
-pip install -r requirements.txt
-```
-
-Requires an NVIDIA GPU (4-bit quantization needs CUDA). Developed and tested on a free
+The notebook installs its own dependencies in the first cell.
+Requires an NVIDIA GPU (4-bit quantization needs CUDA); developed and tested on a free
 Google Colab T4, connected from VS Code via the official Colab extension.
+
 
 ## Repo structure
 
 ```
 .
 ├── finetune_vlm_qlora.ipynb   # main training pipeline (GPU, QLoRA)
-├── requirements.txt
 └── README.md
 ```
 
