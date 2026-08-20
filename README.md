@@ -14,7 +14,7 @@ output the correct answer letter.
 
 - **Base model:** Qwen2-VL-2B-Instruct, loaded in 4-bit (QLoRA / NF4 quantization) to fit
   on a 16GB T4.
-- **Adaptation:** LoRA (`r=16, alpha=32`) applied to all attention and MLP projection
+- **Adaptation:** LoRA (`r=18, alpha=36`) applied to all attention and MLP projection
   layers in the language model backbone. The vision encoder is left frozen.
 - **Data:** 200 training / 20 validation examples from Robo2VLM-1, streamed
   rather than downloaded in bulk (the full dataset is 107GB).
@@ -29,18 +29,13 @@ output the correct answer letter.
 | Training examples | 200 |
 | Validation examples | 20 |
 | Test examples | 100 |
-| Final training loss | 0.244 |
-| Final evaluation loss | 0.358 (step 75) |
+| Final training loss | 0.242 |
+| Final evaluation loss | 0.336 (step 75) |
 | Validation accuracy | 80.0% (16/20) |
 | **Test accuracy** | **67.0% (67/100)** |    
 
 
 **Notes:**
-- The best checkpoint (lowest validation loss) was the very last one, at step 75, meaning
-validation loss was still improving right up to the end of the 3-epoch run rather than
-having plateaued or started rising. This suggests the model likely hadn't finished
-learning yet, and more epochs (or more training data) would plausibly improve results
-further rather than risk overfitting.
 
 - As expected, validation accuracy is higher than test accuracy → the validation set indirectly influenced which checkpoint got kept whereas the test accuracy was done on a fully untouched set.
 
@@ -65,7 +60,7 @@ what actually helps.
 **Higher LoRA rank (r=18, α=36) had the overall best performance.**      
 Lowest training and validation loss,
 same test accuracy as baseline, no meaningful cost in training time.    
-*Will be adopted as the new default going forward.*
+*Adopted as the new default, merged into `main`.*
 
 **More epochs made test accuracy worse, despite a better validation loss.**       
 Step 75 was the best validation-loss checkpoint in all runs.      
