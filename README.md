@@ -47,8 +47,33 @@ further rather than risk overfitting.
 
 ### Next steps
 
-- Train for more epochs.
 - Test on a different dataset entirely.
+
+## Experiments
+
+Two follow-up runs, each changing one thing from the baseline above, to isolate
+what actually helps.
+
+| | Baseline (r=16, α=32, 3 epochs) | 4 epochs (r=16, α=32) | r=18, α=36 (3 epochs) |
+|---|---|---|---|
+| Training loss | 0.244 | 0.246 | **0.242** |
+| Best validation loss | 0.358 (step 75) | 0.343 (step 75) | **0.336** (step 75) |
+| Validation accuracy | 80% | 80% | 80% |
+| **Test accuracy** | **67%** | 62% | **67%** |
+| Training time | ~55 min | ~65 min | **~53 min** |
+
+**Higher LoRA rank (r=18, α=36) had the overall best performance.**      
+Lowest training and validation loss,
+same test accuracy as baseline, no meaningful cost in training time.    
+*Will be adopted as the new default going forward.*
+
+**More epochs made test accuracy worse, despite a better validation loss.**       
+Step 75 was the best validation-loss checkpoint in all runs.      
+In the 4-epoch run, steps 80/85/90 were three consecutive non-improving evaluations, which is exactly what triggered early stopping and cut the run short at step 90 rather than the full 100-step schedule.     
+This showcases the validation-vs-test bias: optimizing harder for validation loss doesn't guarantee better real-world generalization.
+
+*Note: the baseline and 4-epoch runs share identical hyperparameters through step 75, yet their step-75 validation loss differs (0.358 vs. 0.343), since no random seed was fixed, reflecting normal run-to-run training stochasticity (dropout,
+data shuffling order).*
 
 
 ## Setup
